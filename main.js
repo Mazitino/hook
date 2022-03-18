@@ -22,7 +22,7 @@ db.mongoose
     })
     .then(() => {
         console.log("Successfully connect to MongoDB.");
-        check_users();
+        show_users(); //Show all current users in DB on trmianal
     })
     .catch(err => {
         console.error("Connection error", err);
@@ -41,11 +41,34 @@ db.mongoose
     console.log(`Server is running on port ${PORT}.`);
   });
 
-  //Вывод всех пользователей (для проверки)
-function check_users() {
-    const User = db.user;
-    User.find({}, function(err, users){
-      if(err) return console.log(err);
-      console.log(users);
-    }); 
+
+
+
+
+
+
+
+
+  //Add first user admin (dev test)
+function initial(){
+  const User = db.user;
+  const user_test = new User({
+    login: "Admin",
+    password: bcrypt.hashSync("1234",8),
+    role: "admin"
+  }).save(err => {
+    if(err){
+      console,log("error", err);
+    }
+    console.log("added 'user' to roles cpllection");
+  });
+}
+
+  //Show all users (dev check)
+function show_users() {
+  const User = db.user;
+  User.find({}, function(err, users){
+    if(err) return console.log(err);
+    console.log("All users: ", users);
+  }); 
 }
