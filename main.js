@@ -5,17 +5,16 @@ const bcrypt = require("bcryptjs");
 const dbConfig = require("./config/db.config");
 const app = express();
 
-//Cors
+// CORS
 var corsOptions = {origin: "http://localhost:8081"};
 app.use(cors(corsOptions));
 
-//Body-parser
+// BodyParser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//DataBase
+// DB
 const db = require("./models");
-
 db.mongoose
     .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
         useUnifiedTopology: true
@@ -29,27 +28,22 @@ db.mongoose
         process.exit();
     });
 
- // Smple route
- app.get("/", (req, res) => {
-    res.json({ message: "Welcome to application." });
-  });
+// Simple route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to application." });
+});
 
+// Routes
+require("./routes/user.routes")(app,{});
+require("./routes/auth.routes")(app,{});
 
-  // Set port, listen for requests
-  const PORT = process.env.PORT || 8080;
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
-  });
+// Set port, listen for requests
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
+});
 
-
-
-
-
-
-
-
-
-  //Add first user admin (dev test)
+// Add first user admin (dev test)
 function initial(){
   const User = db.user;
   const user_test = new User({
@@ -64,7 +58,7 @@ function initial(){
   });
 }
 
-  //Show all users (dev check)
+// Show all users (dev check)
 function show_users() {
   const User = db.user;
   User.find({}, function(err, users){
